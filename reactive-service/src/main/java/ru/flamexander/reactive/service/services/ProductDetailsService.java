@@ -6,7 +6,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.flamexander.reactive.service.dtos.ProductDetailsDto;
 import ru.flamexander.reactive.service.entities.Product;
-import ru.flamexander.reactive.service.exceptions.AppException;
+import ru.flamexander.reactive.service.exceptions.ResourceNotFoundException;
 import ru.flamexander.reactive.service.integrations.ProductDetailsServiceIntegration;
 
 import java.util.List;
@@ -36,6 +36,6 @@ public class ProductDetailsService {
     private Mono<ProductDetailsDto> callProductDetailService(Product product) {
         return productDetailsServiceIntegration.getProductDetailsById(product.getId())
                 .doOnNext(it -> it.setName(product.getName()))
-                .onErrorReturn(AppException.class, new ProductDetailsDto(product.getId(), null, product.getName()));
+                .onErrorReturn(ResourceNotFoundException.class, new ProductDetailsDto(product.getId(), null, product.getName()));
     }
 }
